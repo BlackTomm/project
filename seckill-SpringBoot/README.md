@@ -80,11 +80,19 @@
 
 **主要页面：**
 
-<img src="https://blog-field-1258773891.cos.ap-beijing.myqcloud.com/my-blog/2020/06/seckill/front_end_design-flow.png" style="zoom:50%;" />
+<div align=center>
+<img src="https://blog-field-1258773891.cos.ap-beijing.myqcloud.com/my-blog/2020/06/seckill/front_end_design-flow.png" width="250px" />
+</div>
+
+
 
 **详情页：**
 
-<img src="https://blog-field-1258773891.cos.ap-beijing.myqcloud.com/my-blog/2020/06/seckill/front-end_design_detail_flow.png" style="zoom:50%;" />
+<div align=center>
+<img src="https://blog-field-1258773891.cos.ap-beijing.myqcloud.com/my-blog/2020/06/seckill/front-end_design_detail_flow.png" width="600px" />
+</div>
+
+
 
 
 
@@ -199,6 +207,6 @@
      </script>
      ```
 
-     如何确保前端获取到了数据，需要debug断点调试，具体参考 [如何调试 JavaScript 脚本](https://wiki.jikexueyuan.com/project/chrome-devtools/debugging-javascript.html)，当刷新页面后看到Scope出获取到值可以确保前端得到了seckill对象值
+     通过debug断点调试，可以确保前端获取到了数据。具体参考 [如何调试 JavaScript 脚本](https://wiki.jikexueyuan.com/project/chrome-devtools/debugging-javascript.html)，当刷新页面后看到Scope出获取到值可以确保前端得到了seckill对象值
 
      ![](https://blog-field-1258773891.cos.ap-beijing.myqcloud.com/my-blog/2020/06/seckill/chrome-debug.png)
