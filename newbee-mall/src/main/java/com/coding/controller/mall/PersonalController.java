@@ -1,0 +1,135 @@
+package com.coding.controller.mall;
+
+import com.coding.common.Constants;
+import com.coding.common.ServiceResultEnum;
+import com.coding.controller.vo.MallUserVO;
+import com.coding.entity.MallUser;
+import com.coding.service.MallShoppingCartService;
+import com.coding.service.MallUserService;
+import com.coding.util.MD5Util;
+import com.coding.util.Result;
+import com.coding.util.ResultGenerator;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+/**
+ * @description:
+ * @author: Black Tom
+ * @create: 2020-07-16 00:32
+ **/
+@Controller
+public class PersonalController {
+
+	@Resource
+	private MallUserService mallUserService;
+
+	/**
+	 * 注册页面跳转
+	 * @return
+	 */
+	@GetMapping({"/register", "register.html"})
+	public String registerPage() {
+		return "mall/register";
+	}
+
+	@PostMapping("/register")
+	@ResponseBody
+	public Result register(@RequestParam("loginName") String loginName,
+						   @RequestParam("verifyCode") String verifyCode,
+						   @RequestParam("password") String password,
+						   HttpSession httpSession) {
+		if (StringUtils.isEmpty(loginName)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NULL.getResult());
+		}
+		if (StringUtils.isEmpty(password)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_PASSWORD_NULL.getResult());
+		}
+		if (StringUtils.isEmpty(verifyCode)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_VERIFY_CODE_NULL.getResult());
+		}
+		String kaptchaCode = httpSession.getAttribute(Constants.MALL_VERIFY_CODE_KEY) + "";
+		if (StringUtils.isEmpty(kaptchaCode) || !verifyCode.equals(kaptchaCode)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_VERIFY_CODE_ERROR.getResult());
+		}
+
+		String registerResult = mallUserService.register(loginName, password);
+		//注册成功
+		if (ServiceResultEnum.SUCCESS.getResult().equals(registerResult)) {
+			return ResultGenerator.genSuccessResult();
+		}
+		//注册失败
+		return ResultGenerator.genFailResult(registerResult);
+	}
+
+	/**
+	 * 登陆页面跳转
+	 * @return
+	 */
+	@GetMapping({"/login", "login.html"})
+	public String loginPage() {
+		return "mall/login";
+	}
+
+	@PostMapping("/login")
+	@ResponseBody
+	public Result login(@RequestParam("loginName") String loginName,
+						@RequestParam("verifyCode") String verifyCode,
+						@RequestParam("password") String password,
+						HttpSession httpSession) {
+		if (StringUtils.isEmpty(loginName)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_NAME_NULL.getResult());
+		}
+		if (StringUtils.isEmpty(password)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_PASSWORD_NULL.getResult());
+		}
+		if (StringUtils.isEmpty(verifyCode)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_VERIFY_CODE_NULL.getResult());
+		}
+		String kaptchaCode = httpSession.getAttribute(Constants.MALL_VERIFY_CODE_KEY) + "";
+		if (StringUtils.isEmpty(kaptchaCode) || !verifyCode.equals(kaptchaCode)) {
+			return ResultGenerator.genFailResult(ServiceResultEnum.LOGIN_VERIFY_CODE_ERROR.getResult());
+		}
+
+		String loginResult = mallUserService.login(loginName, MD5Util.MD5Encode(password, "UTF-8"), httpSession);
+		//登录成功
+		if (ServiceResultEnum.SUCCESS.getResult().equals(loginResult)) {
+			return ResultGenerator.genSuccessResult();
+		}
+		//登录失败
+		return ResultGenerator.genFailResult(loginResult);
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession httpSession) {
+		httpSession.removeAttribute(Constants.MALL_USER_SESSION_KEY);
+		return "mall/login";
+	}
+
+	@GetMapping("/personal")
+	public String personalPage(HttpServletRequest request, HttpSession httpSession){
+		request.setAttribute("path", "personal");
+		return "mall/personal";
+	}
+
+	//未使用
+	@GetMapping("/personal/addresses")
+	public String addressesPage() {
+		return "mall/addresses";
+	}
+
+	@PostMapping("/personal/updateInfo")
+	@ResponseBody
+	public Result updateInfo(@RequestBody MallUser mallUser,HttpSession httpSession){
+		MallUserVO mallUserTemp =mallUserService.updateUserInfo(mallUser, httpSession);
+		if(mallUserTemp==null){
+			return ResultGenerator.genFailResult("修改失败");
+		} else{
+			return ResultGenerator.genSuccessResult();
+		}
+	}
+}

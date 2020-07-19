@@ -11,3 +11,7 @@
 </div>
 
 ​											图片来源：[01 | 设计秒杀系统时应该注意的5个架构原则](https://time.geekbang.org/column/article/40726)
+
+### 新峰商城
+
+利用SpringBoot+Mybatis Plus所做的新峰商城项目，涵盖商城基本功能搭建、后端数据维护及相关前后端数据交互，根据[Spring Boot 大型线上商城项目实战教程](https://juejin.im/book/5da2f9d4f265da5b81794d48)搭建而成，可以作为基础练习。
